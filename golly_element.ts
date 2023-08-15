@@ -1,6 +1,7 @@
 import { Children, Props } from "./types.ts"
 import { ChildrenArrayNonNull } from "./types.ts";
 import { isNotUndefined, processParameter, toHtmlAttributes } from "./utilities.ts";
+import { GollyTextNode } from './golly_text_node.ts'
 
 export class GollyElement {
   cleanChildren (children?: Children): ChildrenArrayNonNull {
@@ -87,6 +88,9 @@ export class GollyElement {
       return children 
     }
     const children = this.children.map(v => v.toString(indentLevel + 1)).join('\n');
+    if (this.children.length === 1 && this.children[0] instanceof GollyTextNode || typeof this.children[0] === 'string') {
+      return `${indentation}${this.opening}${children}${this.closing}`;
+    }
     if (children) return `${indentation}${this.opening}\n${children}\n${indentation}${this.closing}`;
     return `${indentation}${this.opening}${this.closing}`;
   }
